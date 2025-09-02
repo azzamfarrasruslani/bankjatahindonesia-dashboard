@@ -45,39 +45,39 @@ export default function BantuanPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 space-y-12">
-    {/* Header Full Width dengan Gambar Panjang */}
-<div className="w-full bg-gradient-to-r from-[#FB6B00] to-orange-400 px-4 md:px-6 py-12 rounded-xl shadow-md">
-  <div className="max-w-6xl mx-auto flex flex-col items-center gap-6">
-    {/* Gambar Full Lebar */}
-    <Image
-      src="/images/bantuan.png"
-      alt="Ilustrasi Bantuan"
-      width={1600}
-      height={400}
-      className="w-full max-h-[320px] object-cover rounded-xl shadow"
-    />
+      {/* Header Full Width dengan Gambar Panjang */}
+      <div className="w-full bg-gradient-to-r from-[#FB6B00] to-orange-400 px-4 md:px-6 py-12 rounded-xl shadow-md">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-6">
+          {/* Gambar Full Lebar */}
+          <Image
+            src="/images/bantuan.png"
+            alt="Ilustrasi Bantuan"
+            width={1600}
+            height={400}
+            className="w-full max-h-[320px] object-cover rounded-xl shadow"
+          />
 
-    {/* Judul & Deskripsi */}
-    <div className="text-center space-y-3">
-      <h1 className="text-4xl md:text-5xl font-extrabold flex justify-center items-center gap-3 text-white">
-        <HelpCircle size={36} className="drop-shadow" />
-        Pusat Bantuan Pengguna
-      </h1>
-      <p className="text-white/90 text-base max-w-2xl mx-auto">
-        Temukan jawaban umum tentang penyetoran minyak, penggunaan dompet digital, serta informasi seputar layanan Bank Jatah Indonesia.
-      </p>
+          {/* Judul & Deskripsi */}
+          <div className="text-center space-y-3">
+            <h1 className="text-4xl md:text-5xl font-extrabold flex justify-center items-center gap-3 text-white">
+              <HelpCircle size={36} className="drop-shadow" />
+              Pusat Bantuan Pengguna
+            </h1>
+            <p className="text-white/90 text-base max-w-2xl mx-auto">
+              Temukan jawaban umum tentang penyetoran minyak, penggunaan dompet
+              digital, serta informasi seputar layanan Bank Jatah Indonesia.
+            </p>
 
-      {/* Tombol Scroll ke FAQ */}
-      <a
-        href="#faq"
-        className="inline-block mt-4 bg-white text-[#FB6B00] hover:bg-orange-100 font-semibold px-5 py-2 rounded-lg text-sm shadow-md transition"
-      >
-        Lihat FAQ
-      </a>
-    </div>
-  </div>
-</div>
-
+            {/* Tombol Scroll ke FAQ */}
+            <a
+              href="#faq"
+              className="inline-block mt-4 bg-white text-[#FB6B00] hover:bg-orange-100 font-semibold px-5 py-2 rounded-lg text-sm shadow-md transition"
+            >
+              Lihat FAQ
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* FAQ Accordion */}
       <div className="grid md:grid-cols-2 gap-6">
@@ -97,7 +97,11 @@ export default function BantuanPage() {
                 <MessageCircleQuestion size={20} />
                 {faq.question}
               </span>
-              {openIndex === i ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              {openIndex === i ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} />
+              )}
             </button>
 
             <AnimatePresence>
