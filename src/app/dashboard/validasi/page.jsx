@@ -5,13 +5,11 @@ import {
   CheckCheck,
   Clock,
   AlertCircle,
-  Info,
   Eye,
   PieChart,
   Droplet,
-  Users,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const dummyValidasi = [
   {
@@ -46,6 +44,7 @@ const dummyValidasi = [
 
 export default function ValidasiPage() {
   const [filter, setFilter] = useState("semua");
+  const [selected, setSelected] = useState(null); // untuk modal
 
   const filtered = dummyValidasi.filter((data) =>
     filter === "semua" ? true : data.status === filter
@@ -54,37 +53,27 @@ export default function ValidasiPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case "disetujui":
-        return (
-          <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
-            <CheckCheck size={14} /> Disetujui
-          </span>
-        );
+        return <Badge color="green" Icon={CheckCheck} text="Disetujui" />;
       case "menunggu":
-        return (
-          <span className="inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-1 rounded-full">
-            <Clock size={14} /> Menunggu
-          </span>
-        );
+        return <Badge color="yellow" Icon={Clock} text="Menunggu" />;
       case "ditolak":
-        return (
-          <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full">
-            <AlertCircle size={14} /> Ditolak
-          </span>
-        );
+        return <Badge color="red" Icon={AlertCircle} text="Ditolak" />;
       default:
         return null;
     }
   };
 
   const statusList = ["semua", "menunggu", "disetujui", "ditolak"];
-
   const totalVolume = dummyValidasi.reduce((sum, item) => sum + item.volume, 0);
-  const totalDisetujui = dummyValidasi.filter((d) => d.status === "disetujui").length;
-  const totalMenunggu = dummyValidasi.filter((d) => d.status === "menunggu").length;
-  const totalDitolak = dummyValidasi.filter((d) => d.status === "ditolak").length;
+  const totalDisetujui = dummyValidasi.filter(
+    (d) => d.status === "disetujui"
+  ).length;
+  const totalMenunggu = dummyValidasi.filter(
+    (d) => d.status === "menunggu"
+  ).length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 py-10 space-y-8 relative">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -96,7 +85,7 @@ export default function ValidasiPage() {
           Validasi Setoran Minyak
         </h1>
 
-        {/* Tabbing */}
+        {/* Tabs */}
         <div className="flex gap-2 flex-wrap">
           {statusList.map((status) => (
             <button
@@ -116,8 +105,16 @@ export default function ValidasiPage() {
 
       {/* Statistik */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={PieChart} title="Total Validasi" value={dummyValidasi.length} />
-        <StatCard icon={Droplet} title="Total Volume (L)" value={totalVolume.toFixed(1)} />
+        <StatCard
+          icon={PieChart}
+          title="Total Validasi"
+          value={dummyValidasi.length}
+        />
+        <StatCard
+          icon={Droplet}
+          title="Total Volume (L)"
+          value={totalVolume.toFixed(1)}
+        />
         <StatCard icon={CheckCheck} title="Disetujui" value={totalDisetujui} />
         <StatCard icon={Clock} title="Menunggu" value={totalMenunggu} />
       </div>
@@ -129,7 +126,7 @@ export default function ValidasiPage() {
         transition={{ duration: 0.6 }}
         className="overflow-x-auto rounded-xl shadow-md border border-gray-200"
       >
-        <table className="min-w-full bg-white text-sm text-left">
+        <table className="min-w-full bg-white text-sm text-left border-collapse">
           <thead className="bg-[#FB6B00]/10 text-[#FB6B00] uppercase tracking-wider">
             <tr>
               <th className="px-6 py-4">ID</th>
@@ -156,8 +153,11 @@ export default function ValidasiPage() {
                   <td className="px-6 py-4">{item.tanggal}</td>
                   <td className="px-6 py-4">{getStatusBadge(item.status)}</td>
                   <td className="px-6 py-4 text-right">
-                    <button className="flex items-center gap-1 text-sm text-[#FB6B00] hover:underline">
-                      <Eye size={16} /> Lihat Detail
+                    <button
+                      onClick={() => setSelected(item)}
+                      className="flex items-center gap-1 text-sm text-white bg-[#FB6B00] hover:bg-[#e65c00] px-3 py-1 rounded-md transition"
+                    >
+                      <Eye size={16} /> Detail
                     </button>
                   </td>
                 </tr>
@@ -166,20 +166,104 @@ export default function ValidasiPage() {
           </tbody>
         </table>
       </motion.div>
+
+      {/* Modal Detail */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4"
+          >
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 relative"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-[#FB6B00] flex items-center gap-2">
+                  <PieChart size={28} /> Detail Validasi
+                </h2>
+                <button
+                  onClick={() => setSelected(null)}
+                  className="text-gray-500 hover:text-gray-800 transition"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="space-y-4">
+                <InfoRow label="ID" value={selected.id} />
+                <InfoRow label="Nama" value={selected.nama} />
+                <InfoRow label="Volume" value={`${selected.volume} L`} />
+                <InfoRow label="Tanggal" value={selected.tanggal} />
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-gray-700">Status:</span>
+                  {getStatusBadge(selected.status)}
+                </div>
+              </div>
+
+              {/* Footer / Actions */}
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setSelected(null)}
+                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition font-medium"
+                >
+                  Tutup
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
+// Stat Card Component
 function StatCard({ icon: Icon, title, value }) {
   return (
-    <div className="bg-white p-4 border border-gray-100 rounded-lg shadow flex items-center gap-4">
-      <div className="p-2 bg-[#FB6B00]/10 text-[#FB6B00] rounded-full">
-        <Icon size={20} />
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="bg-white border border-gray-200 rounded-2xl shadow-lg flex items-center gap-4 p-5 transition-all duration-300"
+    >
+      <div className="p-3 rounded-full bg-[#FB6B00] text-white flex items-center justify-center">
+        <Icon size={24} />
       </div>
       <div>
-        <p className="text-xs text-gray-500">{title}</p>
-        <p className="text-lg font-semibold">{value}</p>
+        <p className="text-sm text-gray-400">{title}</p>
+        <p className="text-2xl font-bold text-gray-800">{value}</p>
       </div>
+    </motion.div>
+  );
+}
+
+// Badge Component
+function Badge({ color, Icon, text }) {
+  const colors = {
+    green: "bg-green-100 text-green-700",
+    yellow: "bg-yellow-100 text-yellow-800",
+    red: "bg-red-100 text-red-700",
+  };
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${colors[color]}`}
+    >
+      <Icon size={14} /> {text}
+    </span>
+  );
+}
+// Component InfoRow untuk baris info
+function InfoRow({ label, value }) {
+  return (
+    <div className="flex justify-between bg-gray-50 px-4 py-2 rounded-lg shadow-sm">
+      <span className="text-gray-500 font-medium">{label}</span>
+      <span className="text-gray-800 font-semibold">{value}</span>
     </div>
   );
 }

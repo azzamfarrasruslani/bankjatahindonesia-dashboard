@@ -60,39 +60,62 @@ export default function MitraPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 space-y-8">
-      {/* Header + Search */}
+      {/* Header Hero Mitra */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+        className="bg-white border border-gray-200 rounded-2xl px-6 py-8 shadow-md flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10"
       >
-        <h1 className="text-3xl font-bold text-[#FB6B00]">
-          Daftar Mitra Penampung Jelantah
-        </h1>
-        <div className="relative max-w-sm w-full">
-          <input
-            type="text"
-            placeholder="Cari mitra atau kelurahan..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FB6B00] focus:outline-none"
-          />
-          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+        {/* Ikon Besar */}
+        <div className="bg-[#FB6B00]/10 p-4 rounded-full">
+          <Building2 size={40} className="text-[#FB6B00]" />
+        </div>
+
+        {/* Judul & Deskripsi */}
+        <div className="flex-1 space-y-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+            Temukan Mitra Penampung Jelantah
+          </h1>
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-2xl">
+            Jelajahi mitra resmi Bank Jatah di berbagai wilayah. Cari
+            berdasarkan kelurahan atau nama mitra untuk memulai penyetoran
+            minyak bekas.
+          </p>
+
+          {/* Search Bar */}
+          <div className="relative w-full max-w-md mt-4">
+            <div className="flex items-center border border-gray-300 bg-white rounded-lg overflow-hidden shadow-sm focus-within:ring-2 focus-within:ring-[#FB6B00] transition">
+              <span className="pl-3 text-gray-400">
+                <Search size={20} />
+              </span>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari berdasarkan nama mitra, kota, atau kelurahan..."
+                className="flex-1 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="pr-3 text-gray-400 hover:text-gray-600 transition"
+                  title="Bersihkan"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </motion.div>
 
-      {/* Kartu Mitra */}
       <motion.div
         initial="hidden"
         animate="visible"
         variants={{
           hidden: {},
-          visible: {
-            transition: {
-              staggerChildren: 0.1,
-            },
-          },
+          visible: { transition: { staggerChildren: 0.1 } },
         }}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
@@ -108,13 +131,13 @@ export default function MitraPage() {
           filteredMitra.map((mitra, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-xl p-4 shadow-md border border-gray-100 hover:shadow-lg transition-all space-y-4"
+              className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all p-5 flex flex-col justify-between"
             >
               {/* Peta */}
-              <div className="w-full h-44 rounded-md overflow-hidden">
+              <div className="relative w-full h-44 rounded-xl overflow-hidden shadow-sm mb-3">
                 <iframe
                   src={mitra.mapsEmbed}
                   width="100%"
@@ -122,26 +145,31 @@ export default function MitraPage() {
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="rounded-md border border-gray-200"
-                ></iframe>
+                  className="rounded-xl border-0"
+                />
+                <div className="absolute top-2 right-2 bg-white/80 px-2 py-1 rounded-full text-xs font-medium text-gray-700 shadow">
+                  {mitra.status || "Tersedia"}
+                </div>
               </div>
 
               {/* Info Mitra */}
-              <div className="flex items-center gap-3 text-xl font-semibold text-[#FB6B00]">
-                <Building2 size={24} />
-                {mitra.nama}
+              <div className="flex flex-col gap-2 mb-2">
+                <h3 className="flex items-center gap-2 text-lg font-bold text-[#FB6B00]">
+                  <Building2 size={20} /> {mitra.nama}
+                </h3>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <MapPin size={16} /> {mitra.lokasi}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Phone size={16} /> {mitra.kontak}
+                </div>
+                <p className="text-sm text-gray-500 truncate">
+                  {mitra.deskripsi}
+                </p>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <MapPin size={16} />
-                <span className="truncate">{mitra.lokasi}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Phone size={16} />
-                <span>{mitra.kontak}</span>
-              </div>
-              <p className="text-sm text-gray-500">{mitra.deskripsi}</p>
 
-              <div className="flex items-center gap-1">
+              {/* Rating */}
+              <div className="flex items-center gap-1 mb-3">
                 {renderStars(mitra.rating)}
                 <span className="text-xs text-gray-400 ml-1">
                   ({mitra.rating})
@@ -149,16 +177,26 @@ export default function MitraPage() {
               </div>
 
               {/* Tombol WA */}
-              <div className="flex mt-3">
-                <a
-                  href={`https://wa.me/62${mitra.kontak.replace(/[^0-9]/g, '').slice(1)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-green-500 text-white px-4 py-2 text-sm rounded-md hover:bg-green-600 transition w-full text-center"
-                >
-                  Hubungi via WhatsApp
-                </a>
-              </div>
+              <a
+                href={`https://wa.me/62${mitra.kontak
+                  .replace(/[^0-9]/g, "")
+                  .slice(1)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-medium flex items-center justify-center gap-2 transition"
+              >
+                {/* <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="currentColor"
+            className="bi bi-whatsapp"
+            viewBox="0 0 16 16"
+          >
+            <path d="M13.601 2.326a7.94 7.94 0 0 0-11.264 0 7.94 7.94 0 0 0 0 11.264l-.465 1.708 1.758-.465a7.94 7.94 0 0 0 11.264-11.264zm-1.336 8.663c-.203.57-1.175 1.102-1.612 1.166-.437.064-.846.097-1.234-.064-.388-.162-1.305-.479-2.467-1.277-1.51-1.123-2.513-2.51-2.806-2.889-.292-.38-.247-.587-.247-.987 0-.399.197-.73.27-.814.073-.085.161-.128.27-.128.11 0 .253.008.385.006.13-.002.304-.05.47.36.165.41.567 1.417.617 1.518.05.101.085.224.017.361-.068.138-.103.22-.21.34-.107.121-.228.27-.326.363-.097.094-.198.197-.128.394.07.197.31.652.66 1.047.454.52.836.69 1.024.773.188.084.297.07.406-.041.107-.108.46-.532.58-.718.122-.186.243-.155.406-.094.163.062 1.028.484 1.205.57.177.085.296.128.34.197.043.07.043.41-.16.98z" />
+          </svg> */}
+                Hubungi via WA
+              </a>
             </motion.div>
           ))
         )}

@@ -2,9 +2,12 @@ import Sidebar from "@/components/dashboard/Sidebar";
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="flex items-stretch min-h-screen">
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar tetap fixed */}
       <Sidebar />
-      <main className="flex-1 bg-gray-50 p-6">{children}</main>
+
+      {/* Main content terdorong oleh sidebar */}
+      <main className="pl-64 p-6">{children}</main>
     </div>
   );
 }
