@@ -8,20 +8,28 @@ import {
   Wallet,
   Users,
   ShieldCheck,
-  BookOpen,
-  LogOut,
   HelpCircle,
+  Gift,
+  CreditCard,
+  Layers,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 
 // Menu utama (tanpa "Keluar")
+
 const menuItems = [
   { label: "Beranda", icon: Home, href: "/dashboard", exact: true },
   { label: "Setor Minyak", icon: UploadCloud, href: "/dashboard/setor" },
   { label: "Wallet", icon: Wallet, href: "/dashboard/wallet" },
   { label: "Mitra", icon: Users, href: "/dashboard/mitra" },
   { label: "Validasi", icon: ShieldCheck, href: "/dashboard/validasi" },
+  { label: "Tukar Poin", icon: Gift, href: "/dashboard/tukar-poin" }, // tambahan
+  { label: "Transaksi", icon: CreditCard, href: "/dashboard/transaksi" },
+  { label: "Program Jelantah", icon: Layers, href: "/dashboard/program-jelantah" },
   { label: "Bantuan", icon: HelpCircle, href: "/dashboard/bantuan" },
+  { label: "Pengaturan", icon: Settings, href: "/dashboard/pengaturan" },
 ];
 
 const logoutItem = {
